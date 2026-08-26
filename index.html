@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JPGS Store | Digital Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --accent-glow: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            padding-top: 80px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-nav {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-nav:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 1rem 3rem 1rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 90%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-family: 'Fira Code', monospace;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(17, 24, 39, 0.4);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .content-container {
+            max-width: 1000px;
+            width: 90%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+            padding: 3rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '//';
+            color: var(--accent-cyan);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-glow);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .tag-free {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent-cyan);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        .product-desc {
+            color: var(--text-muted);
+            font-size: 0.925rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-box {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-original {
+            font-family: 'Fira Code', monospace;
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .price-current {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--accent-glow), #6366f1);
+            color: #fff;
+            border: none;
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover { opacity: 0.9; }
+
+        .arch-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .arch-item {
+            background: rgba(3, 7, 18, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.25rem;
+            border-radius: 10px;
+        }
+
+        .arch-item h4 {
+            font-family: 'Fira Code', monospace;
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .privacy-section {
+            background: rgba(3, 7, 18, 0.4);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .privacy-section h3 {
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: 'Fira Code', monospace;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-brand">⚡ JPGS_STORE_V1.1</div>
+        <div class="nav-actions">
+            <a href="https://portafolio-jpeg.vercel.app/" target="_blank" class="btn-nav" id="btn-portfolio">🌐 Portafolio JPEG</a>
+            <button class="btn-nav" id="btn-lang" onclick="toggleLanguage()">🇺🇸 EN</button>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <h1 class="hero-title">Digital Vault</h1>
+        <p class="hero-subtitle" id="hero-desc">
+            Bóveda digital centralizada de recursos de alto impacto, guías de ingeniería de prompts y arquitecturas de código limpio.
+        </p>
+    </section>
+
+    <div class="content-container">
+
+        <section id="recursos">
+            <div class="section-header">
+                <h2 class="section-title" id="title-resources">Recursos & Manuales</h2>
+            </div>
+            <div class="resources-grid">
+                <div class="product-card">
+                    <span class="tag-free" id="tag-es">PROMO 100% OFF</span>
+                    <div>
+                        <h3 class="product-title" id="card-es-title">Gemini a tu medida</h3>
+                        <p class="product-desc" id="card-es-desc">El manual definitivo en español de instrucciones personalizadas y Gems para exprimir al máximo tu IA con un enfoque práctico.</p>
+                    </div>
+                    <div>
+                        <div class="pricing-box">
+                            <span class="price-original">$10.000 COP / $5 USD</span>
+                            <span class="price-current" id="price-es">GRATIS</span>
+                        </div>
+                        <a href="gemini_a_tu_medida_español.pdf" download class="btn-action" id="btn-es">Descargar PDF Directo 🚀</a>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <span class="tag-free" id="tag-en">PROMO 100% OFF</span>
+                    <div>
+                        <h3 class="product-title" id="card-en-title">Gemini in Your Way</h3>
+                        <p class="product-desc" id="card-en-desc">The ultimate English manual for custom instructions and specialized Gems designed to optimize your everyday AI workflows.</p>
+                    </div>
+                    <div>
+                        <div class="pricing-box">
+                            <span class="price-original">$10.000 COP / $5 USD</span>
+                            <span class="price-current" id="price-en">FREE</span>
+                        </div>
+                        <a href="gemini_a_tu_medida_english.pdf" download class="btn-action" id="btn-en">Download PDF Direct 🚀</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="arquitectura">
+            <div class="section-header">
+                <h2 class="section-title" id="title-arch">Arquitectura del Sistema</h2>
+            </div>
+            <div class="arch-card">
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;" id="arch-desc">
+                    Estructura técnica optimizada para entrega rápida de activos digitales sin procesamiento de servidor ni intermediarios.
+                </p>
+                <div class="arch-grid">
+                    <div class="arch-item">
+                        <h4 id="arch-node1-title">01. Hosting Edge</h4>
+                        <p id="arch-node1-desc">Despliegue global en Vercel Edge Network con latencia mínima y SSL automatizado.</p>
+                    </div>
+                    <div class="arch-item">
+                        <h4 id="arch-node2-title">02. Cero Back-End</h4>
+                        <p id="arch-node2-desc">Descarga directa cliente-servidor para máxima velocidad de transferencia.</p>
+                    </div>
+                    <div class="arch-item">
+                        <h4 id="arch-node3-title">03. UI Ligera</h4>
+                        <p id="arch-node3-desc">Construido en HTML5/CSS3 nativo con renderizado ultrarrápido sin dependencias pesadas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="privacy-section">
+            <h3 id="priv-title">🔒 Política de Privacidad y Transparencia Digital</h3>
+            <p id="priv-desc">
+                En <strong>JPGS Store</strong> valoramos tu tranquilidad y privacidad por encima de todo. Este sitio web opera bajo una política de <strong>cero recopilación de datos</strong>: no solicitamos registros, no utilizamos cookies de rastreo comercial ni almacenamos ningún tipo de información personal. Las descargas son libres, directas y totalmente seguras.
+            </p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p id="footer-text">© 2026 JPGS Store • Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        let currentLang = 'es';
+
+        const i18n = {
+            es: {
+                btnNavPortfolio: "🌐 Portafolio JPEG",
+                btnLang: "🇺🇸 EN",
+                heroDesc: "Bóveda digital centralizada de recursos de alto impacto, guías de ingeniería de prompts y arquitecturas de código limpio.",
+                titleResources: "Recursos & Manuales",
+                tagEs: "PROMO 100% OFF",
+                cardEsTitle: "Gemini a tu medida",
+                cardEsDesc: "El manual definitivo en español de instrucciones personalizadas y Gems para exprimir al máximo tu IA con un enfoque práctico.",
+                priceEs: "GRATIS",
+                btnEs: "Descargar PDF Directo 🚀",
+                tagEn: "PROMO 100% OFF",
+                cardEnTitle: "Gemini in Your Way",
+                cardEnDesc: "The ultimate English manual for custom instructions and specialized Gems designed to optimize your everyday AI workflows.",
+                priceEn: "GRATIS",
+                btnEn: "Descargar PDF Directo 🚀",
+                titleArch: "Arquitectura del Sistema",
+                archDesc: "Estructura técnica optimizada para entrega rápida de activos digitales sin procesamiento de servidor ni intermediarios.",
+                archNode1Title: "01. Hosting Edge",
+                archNode1Desc: "Despliegue global en Vercel Edge Network con latencia mínima y SSL automatizado.",
+                archNode2Title: "02. Cero Back-End",
+                archNode2Desc: "Descarga directa cliente-servidor para máxima velocidad de transferencia.",
+                archNode3Title: "03. UI Ligera",
+                archNode3Desc: "Construido en HTML5/CSS3 nativo con renderizado ultrarrápido sin dependencias pesadas.",
+                privTitle: "🔒 Política de Privacidad y Transparencia Digital",
+                privDesc: "En <strong>JPGS Store</strong> valoramos tu tranquilidad y privacidad por encima de todo. Este sitio web opera bajo una política de <strong>cero recopilación de datos</strong>: no solicitamos registros, no utilizamos cookies de rastreo comercial ni almacenamos ningún tipo de información personal. Las descargas son libres, directas y totalmente seguras.",
+                footerText: "© 2026 JPGS Store • Todos los derechos reservados"
+            },
+            en: {
+                btnNavPortfolio: "🌐 JPEG Portfolio",
+                btnLang: "🇨🇴 ES",
+                heroDesc: "Centralized digital vault for high-impact resources, prompt engineering guides, and clean code architectures.",
+                titleResources: "Resources & Manuals",
+                tagEs: "100% OFF PROMO",
+                cardEsTitle: "Gemini Tailored for You",
+                cardEsDesc: "The definitive Spanish manual for custom instructions and Gems to make the most of your AI with a practical approach.",
+                priceEs: "FREE",
+                btnEs: "Direct PDF Download 🚀",
+                tagEn: "100% OFF PROMO",
+                cardEnTitle: "Gemini in Your Way",
+                cardEnDesc: "The ultimate English manual for custom instructions and specialized Gems designed to optimize your everyday AI workflows.",
+                priceEn: "FREE",
+                btnEn: "Direct PDF Download 🚀",
+                titleArch: "System Architecture",
+                archDesc: "Technical structure optimized for rapid digital asset delivery without server-side friction or intermediaries.",
+                archNode1Title: "01. Edge Hosting",
+                archNode1Desc: "Global deployment on Vercel Edge Network with minimal latency and automated SSL.",
+                archNode2Title: "02. Zero Back-End",
+                archNode2Desc: "Direct client-server downloading for maximum transfer speed.",
+                archNode3Title: "03. Lightweight UI",
+                archNode3Desc: "Built with native HTML5/CSS3 featuring ultra-fast rendering without heavy dependencies.",
+                privTitle: "🔒 Privacy Policy & Digital Transparency",
+                privDesc: "At <strong>JPGS Store</strong> we value your peace of mind and privacy above all. This website operates under a <strong>zero data collection</strong> policy: we do not request registrations, use commercial tracking cookies, or store any personal information. Downloads are free, direct, and completely safe.",
+                footerText: "© 2026 JPGS Store • All rights reserved"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            const t = i18n[currentLang];
+
+            document.getElementById('btn-portfolio').innerHTML = t.btnNavPortfolio;
+            document.getElementById('btn-lang').innerHTML = t.btnLang;
+            document.getElementById('hero-desc').innerHTML = t.heroDesc;
+            document.getElementById('title-resources').innerHTML = t.titleResources;
+            
+            document.getElementById('tag-es').innerHTML = t.tagEs;
+            document.getElementById('card-es-title').innerHTML = t.cardEsTitle;
+            document.getElementById('card-es-desc').innerHTML = t.cardEsDesc;
+            document.getElementById('price-es').innerHTML = t.priceEs;
+            document.getElementById('btn-es').innerHTML = t.btnEs;
+
+            document.getElementById('tag-en').innerHTML = t.tagEn;
+            document.getElementById('card-en-title').innerHTML = t.cardEnTitle;
+            document.getElementById('card-en-desc').innerHTML = t.cardEnDesc;
+            document.getElementById('price-en').innerHTML = t.priceEn;
+            document.getElementById('btn-en').innerHTML = t.btnEn;
+
+            document.getElementById('title-arch').innerHTML = t.titleArch;
+            document.getElementById('arch-desc').innerHTML = t.archDesc;
+            document.getElementById('arch-node1-title').innerHTML = t.archNode1Title;
+            document.getElementById('arch-node1-desc').innerHTML = t.archNode1Desc;
+            document.getElementById('arch-node2-title').innerHTML = t.archNode2Title;
+            document.getElementById('arch-node2-desc').innerHTML = t.archNode2Desc;
+            document.getElementById('arch-node3-title').innerHTML = t.archNode3Title;
+            document.getElementById('arch-node3-desc').innerHTML = t.archNode3Desc;
+
+            document.getElementById('priv-title').innerHTML = t.privTitle;
+            document.getElementById('priv-desc').innerHTML = t.privDesc;
+            document.getElementById('footer-text').innerHTML = t.footerText;
+        }
+    </script>
+</body>
+</html>
