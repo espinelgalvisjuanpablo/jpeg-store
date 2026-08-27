@@ -1,25 +1,46 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JPEG Store | Digital Vault</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <title>Baúl Digital | JPEG Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0b0f19;
-            --card-bg: rgba(17, 24, 39, 0.7);
+            --card-bg: rgba(17, 24, 39, 0.75);
             --accent-glow: #8b5cf6;
             --accent-cyan: #06b6d4;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --border-color: rgba(139, 92, 246, 0.2);
+            --border-color: rgba(139, 92, 246, 0.25);
+            --header-bg: rgba(11, 15, 25, 0.88);
+            --code-bg: rgba(3, 7, 18, 0.85);
+            --hero-gradient: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
+            --footer-bg: rgba(3, 7, 18, 0.95);
+        }
+
+        body.light-theme {
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --accent-glow: #7c3aed;
+            --accent-cyan: #0891b2;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: rgba(124, 58, 237, 0.2);
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --code-bg: #0f172a;
+            --hero-gradient: linear-gradient(135deg, #0f172a 30%, #475569 100%);
+            --footer-bg: #f1f5f9;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease;
         }
 
         body {
@@ -32,6 +53,7 @@
             overflow-x: hidden;
             position: relative;
             padding-top: 80px;
+            scroll-behavior: smooth;
         }
 
         body::before {
@@ -39,9 +61,10 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
-                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
+                radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 45%);
             z-index: -1;
+            pointer-events: none;
         }
 
         .navbar {
@@ -49,15 +72,17 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 70px;
-            background: rgba(11, 15, 25, 0.85);
-            backdrop-filter: blur(12px);
+            height: 72px;
+            background: var(--header-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 2rem;
+            padding: 0 5%;
             z-index: 1000;
+            gap: 12px;
         }
 
         .nav-brand {
@@ -65,31 +90,63 @@
             font-size: 0.95rem;
             color: var(--accent-cyan);
             font-weight: 700;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+            background: rgba(139, 92, 246, 0.1);
         }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 8px;
         }
 
         .btn-nav {
-            background: rgba(139, 92, 246, 0.15);
+            background: rgba(139, 92, 246, 0.12);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 0.4rem 0.9rem;
+            padding: 0.42rem 0.9rem;
             border-radius: 20px;
             font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
         }
 
         .btn-nav:hover {
             border-color: var(--accent-cyan);
             color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+            transform: translateY(-1px);
         }
 
         .hero-section {
@@ -98,14 +155,14 @@
             max-width: 1000px;
             margin: 0 auto;
             width: 90%;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .hero-title {
             font-size: 3.5rem;
             font-weight: 800;
             letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #fff 30%, var(--text-muted) 100%);
+            background: var(--hero-gradient);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -117,16 +174,17 @@
             color: var(--text-muted);
             font-size: 0.95rem;
             line-height: 1.6;
-            max-width: 700px;
+            max-width: 750px;
             margin: 0 auto;
-            background: rgba(17, 24, 39, 0.4);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
+            padding: 1.1rem 1.6rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
         .content-container {
-            max-width: 1000px;
+            max-width: 1080px;
             width: 90%;
             margin: 0 auto;
             display: flex;
@@ -142,7 +200,7 @@
         .section-title {
             font-size: 1.75rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -171,22 +229,24 @@
             justify-content: space-between;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
             position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             border-color: var(--accent-glow);
             box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
         }
 
         .tag-free {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
+            top: 1.4rem;
+            right: 1.4rem;
             background: rgba(6, 182, 212, 0.15);
             color: var(--accent-cyan);
             font-family: 'Fira Code', monospace;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
+            font-weight: 700;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             border: 1px solid rgba(6, 182, 212, 0.3);
@@ -194,14 +254,15 @@
 
         .product-title {
             font-size: 1.25rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 0.75rem;
-            color: #fff;
+            color: var(--text-main);
+            padding-right: 80px;
         }
 
         .product-desc {
             color: var(--text-muted);
-            font-size: 0.925rem;
+            font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 1.5rem;
         }
@@ -210,19 +271,19 @@
             display: flex;
             align-items: baseline;
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .price-original {
             font-family: 'Fira Code', monospace;
             text-decoration: line-through;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
 
         .price-current {
             font-family: 'Fira Code', monospace;
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 700;
             color: var(--accent-cyan);
         }
@@ -233,108 +294,200 @@
             border: none;
             padding: 0.85rem 1rem;
             border-radius: 8px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             text-decoration: none;
             text-align: center;
             display: block;
             width: 100%;
-            transition: opacity 0.2s;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
         }
 
-        .btn-action:hover { opacity: 0.9; }
+        .btn-action:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        /* CARD CODEX GUÍA */
+        .codex-card {
+            border-color: rgba(6, 182, 212, 0.4);
+            grid-column: 1 / -1;
+        }
+
+        .codex-steps {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin: 1.2rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .codex-steps .step-title {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .codex-steps code {
+            color: #4ade80;
+            background: rgba(0,0,0,0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
 
         .arch-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
         .arch-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
 
         .arch-item {
-            background: rgba(3, 7, 18, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
             padding: 1.25rem;
-            border-radius: 10px;
+            border-radius: 12px;
         }
 
         .arch-item h4 {
             font-family: 'Fira Code', monospace;
             color: var(--accent-cyan);
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             margin-bottom: 0.5rem;
         }
 
         .arch-item p {
             font-size: 0.85rem;
             color: var(--text-muted);
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .privacy-section {
-            background: rgba(3, 7, 18, 0.4);
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            font-size: 0.85rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            line-height: 1.6;
+            line-height: 1.65;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
-        .privacy-section h3 {
-            color: #fff;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-            font-family: 'Fira Code', monospace;
+        .privacy-section h2 {
+            margin-bottom: 1rem;
         }
 
         footer {
             text-align: center;
-            padding: 2rem 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.85rem;
+            padding: 2.5rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.82rem;
             color: var(--text-muted);
             font-family: 'Fira Code', monospace;
+            background: var(--footer-bg);
             margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+                flex-wrap: wrap;
+                height: auto;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
 
     <header class="navbar">
-        <div class="nav-brand">⚡ JPEG_STORE_V1.1</div>
+        <a href="#hero" class="nav-brand" id="brand-text">⚡ BAÚL_DIGITAL_V1.2</a>
+        
+        <nav class="nav-links">
+            <a href="#recursos" class="nav-link" id="nav-res">Recursos & Manuales</a>
+            <a href="#arquitectura" class="nav-link" id="nav-arch">Arquitectura</a>
+            <a href="#privacidad" class="nav-link" id="nav-priv">Políticas & Privacidad</a>
+        </nav>
+
         <div class="nav-actions">
-            <a href="https://portafolio-jpeg.vercel.app/" target="_blank" class="btn-nav" id="btn-portfolio">🌐 Portafolio JPEG</a>
-            <button class="btn-nav" id="btn-lang" onclick="toggleLanguage()">🇺🇸 EN</button>
+            <a href="https://portafolio-jpeg.vercel.app/" target="_blank" rel="noopener" class="btn-nav" id="btn-portfolio">🌐 Portafolio JPEG</a>
+            <button class="btn-nav" id="btn-lang" onclick="toggleLanguage()">🇨🇴 ESP</button>
+            <button class="btn-nav" id="btn-theme" onclick="toggleTheme()" title="Cambiar Tema / Toggle Theme">🌙</button>
         </div>
     </header>
 
-    <section class="hero-section">
-        <h1 class="hero-title">Digital Vault</h1>
+    <section class="hero-section" id="hero">
+        <h1 class="hero-title" id="hero-title">Baúl Digital</h1>
         <p class="hero-subtitle" id="hero-desc">
-            Bóveda digital centralizada de recursos de alto impacto, guías de ingeniería de prompts y arquitecturas de código limpio.
+            Bóveda digital centralizada de recursos de alto impacto, guías de ingeniería de prompts, configuración ágil de Codex y arquitecturas de código limpio.
         </p>
     </section>
 
     <div class="content-container">
 
+        <!-- RECURSOS & MANUALES -->
         <section id="recursos">
             <div class="section-header">
                 <h2 class="section-title" id="title-resources">Recursos & Manuales</h2>
             </div>
+            
             <div class="resources-grid">
+                
+                <!-- CODEX GUÍA DE INSTALACIÓN & SNIPPET -->
+                <div class="product-card codex-card">
+                    <span class="tag-free" id="tag-codex">GUÍA DE INSTALACIÓN</span>
+                    <div>
+                        <h3 class="product-title" id="card-codex-title">Codex: Instalación & Flujo de Desarrollo</h3>
+                        <p class="product-desc" id="card-codex-desc">Guía rápida y estructurada con buenas prácticas para configurar el agente de codificación Codex en tu entorno local, optimizar prompts y generar código limpio.</p>
+                        
+                        <div class="codex-steps">
+                            <span class="step-title" id="step1-title">⚡ Paso 1: Instalación de CLI / Extensión</span>
+                            <span id="step1-code"><code>npm install -g @openai/codex</code> &nbsp;o activa la extensión en VS Code.</span>
+                            
+                            <span class="step-title" id="step2-title">🔑 Paso 2: Autenticación de API Key</span>
+                            <span id="step2-code"><code>export OPENAI_API_KEY="tu-token-aqui"</code> (Linux/Mac) o <code>$env:OPENAI_API_KEY="tu-token"</code> (PowerShell).</span>
+                            
+                            <span class="step-title" id="step3-title">🚀 Paso 3: Flujo de Ejecución & Generación Limpia</span>
+                            <span id="step3-code"><code>codex --goal "Crea un componente SPA modular en Vanilla JS con persistencia"</code></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="pricing-box">
+                            <span class="price-original">Manual Pro $15 USD</span>
+                            <span class="price-current" id="price-codex">ACCESO LIBRE</span>
+                        </div>
+                        <a href="https://github.com/features/copilot" target="_blank" rel="noopener" class="btn-action" id="btn-codex">Explorar Ecosistema Codex ⚡</a>
+                    </div>
+                </div>
+
+                <!-- GEMINI ESPAÑOL -->
                 <div class="product-card">
                     <span class="tag-free" id="tag-es">PROMO 100% OFF</span>
                     <div>
                         <h3 class="product-title" id="card-es-title">Gemini a tu medida</h3>
-                        <p class="product-desc" id="card-es-desc">El manual definitivo en español de instrucciones personalizadas y Gems para exprimir al máximo tu IA con un enfoque práctico.</p>
+                        <p class="product-desc" id="card-es-desc">El manual definitivo en español de instrucciones personalizadas y Gems para exprimir al máximo tu IA con un enfoque práctico y productivo.</p>
                     </div>
                     <div>
                         <div class="pricing-box">
@@ -345,6 +498,7 @@
                     </div>
                 </div>
 
+                <!-- GEMINI ENGLISH -->
                 <div class="product-card">
                     <span class="tag-free" id="tag-en">PROMO 100% OFF</span>
                     <div>
@@ -354,20 +508,22 @@
                     <div>
                         <div class="pricing-box">
                             <span class="price-original">$10.000 COP / $5 USD</span>
-                            <span class="price-current" id="price-en">FREE</span>
+                            <span class="price-current" id="price-en">GRATIS</span>
                         </div>
                         <a href="gemini_a_tu_medida_english.pdf" download class="btn-action" id="btn-en">Download PDF Direct 🚀</a>
                     </div>
                 </div>
+
             </div>
         </section>
 
+        <!-- ARQUITECTURA -->
         <section id="arquitectura">
             <div class="section-header">
                 <h2 class="section-title" id="title-arch">Arquitectura del Sistema</h2>
             </div>
             <div class="arch-card">
-                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;" id="arch-desc">
+                <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.5;" id="arch-desc">
                     Estructura técnica optimizada para entrega rápida de activos digitales sin procesamiento de servidor ni intermediarios.
                 </p>
                 <div class="arch-grid">
@@ -387,11 +543,16 @@
             </div>
         </section>
 
-        <section class="privacy-section">
-            <h3 id="priv-title">🔒 Política de Privacidad y Transparencia Digital</h3>
-            <p id="priv-desc">
-                En <strong>JP Store</strong> valoramos tu tranquilidad y privacidad por encima de todo. Este sitio web opera bajo una política de <strong>cero recopilación de datos</strong>: no solicitamos registros, no utilizamos cookies de rastreo comercial ni almacenamos ningún tipo de información personal. Las descargas son libres, directas y totalmente seguras.
-            </p>
+        <!-- POLÍTICAS & PRIVACIDAD -->
+        <section id="privacidad">
+            <div class="section-header">
+                <h2 class="section-title" id="title-privacy">Políticas & Privacidad</h2>
+            </div>
+            <div class="privacy-section">
+                <p id="priv-desc">
+                    En <strong>JPEG Store</strong> valoramos tu tranquilidad y privacidad por encima de todo. Este sitio web opera bajo una política de <strong>cero recopilación de datos</strong>: no solicitamos registros, no utilizamos cookies de rastreo comercial ni almacenamos ningún tipo de información personal. Las descargas son libres, directas y totalmente seguras.
+                </p>
+            </div>
         </section>
 
     </div>
@@ -401,24 +562,46 @@
     </footer>
 
     <script>
-        let currentLang = 'es';
+        let currentLang = localStorage.getItem('jpeg_store_lang') || 'es';
+        let currentTheme = localStorage.getItem('jpeg_store_theme') || 'dark';
 
         const i18n = {
             es: {
+                pageTitle: "Baúl Digital | JPEG Store",
+                brandText: "⚡ BAÚL_DIGITAL_V1.2",
+                navRes: "Recursos & Manuales",
+                navArch: "Arquitectura",
+                navPriv: "Políticas & Privacidad",
                 btnNavPortfolio: "🌐 Portafolio JPEG",
-                btnLang: "🇺🇸 EN",
-                heroDesc: "Bóveda digital centralizada de recursos de alto impacto, guías de ingeniería de prompts y arquitecturas de código limpio.",
+                btnLang: "🇨🇴 ESP",
+                heroTitle: "Baúl Digital",
+                heroDesc: "Bóveda digital centralizada de recursos de alto impacto, guías de ingeniería de prompts, configuración ágil de Codex y arquitecturas de código limpio.",
                 titleResources: "Recursos & Manuales",
+                
+                tagCodex: "GUÍA DE INSTALACIÓN",
+                cardCodexTitle: "Codex: Instalación & Flujo de Desarrollo",
+                cardCodexDesc: "Guía rápida y estructurada con buenas prácticas para configurar el agente de codificación Codex en tu entorno local, optimizar prompts y generar código limpio.",
+                step1Title: "⚡ Paso 1: Instalación de CLI / Extensión",
+                step1Code: "<code>npm install -g @openai/codex</code> &nbsp;o activa la extensión en VS Code.",
+                step2Title: "🔑 Paso 2: Autenticación de API Key",
+                step2Code: "<code>export OPENAI_API_KEY=\"tu-token-aqui\"</code> (Linux/Mac) o <code>$env:OPENAI_API_KEY=\"tu-token\"</code> (PowerShell).",
+                step3Title: "🚀 Paso 3: Flujo de Ejecución & Generación Limpia",
+                step3Code: "<code>codex --goal \"Crea un componente SPA modular en Vanilla JS con persistencia\"</code>",
+                priceCodex: "ACCESO LIBRE",
+                btnCodex: "Explorar Ecosistema Codex ⚡",
+
                 tagEs: "PROMO 100% OFF",
                 cardEsTitle: "Gemini a tu medida",
-                cardEsDesc: "El manual definitivo en español de instrucciones personalizadas y Gems para exprimir al máximo tu IA con un enfoque práctico.",
+                cardEsDesc: "El manual definitivo en español de instrucciones personalizadas y Gems para exprimir al máximo tu IA con un enfoque práctico y productivo.",
                 priceEs: "GRATIS",
                 btnEs: "Descargar PDF Directo 🚀",
+
                 tagEn: "PROMO 100% OFF",
                 cardEnTitle: "Gemini in Your Way",
-                cardEnDesc: "The ultimate English manual for custom instructions and specialized Gems designed to optimize your everyday AI workflows.",
+                cardEnDesc: "El manual definitivo en inglés de instrucciones personalizadas y Gems para optimizar tus flujos diarios de trabajo con IA.",
                 priceEn: "GRATIS",
-                btnEn: "Descargar PDF Directo 🚀",
+                btnEn: "Descargar PDF en Inglés 🚀",
+
                 titleArch: "Arquitectura del Sistema",
                 archDesc: "Estructura técnica optimizada para entrega rápida de activos digitales sin procesamiento de servidor ni intermediarios.",
                 archNode1Title: "01. Hosting Edge",
@@ -427,25 +610,47 @@
                 archNode2Desc: "Descarga directa cliente-servidor para máxima velocidad de transferencia.",
                 archNode3Title: "03. UI Ligera",
                 archNode3Desc: "Construido en HTML5/CSS3 nativo con renderizado ultrarrápido sin dependencias pesadas.",
-                privTitle: "🔒 Política de Privacidad y Transparencia Digital",
+                
+                titlePrivacy: "Políticas & Privacidad",
                 privDesc: "En <strong>JPEG Store</strong> valoramos tu tranquilidad y privacidad por encima de todo. Este sitio web opera bajo una política de <strong>cero recopilación de datos</strong>: no solicitamos registros, no utilizamos cookies de rastreo comercial ni almacenamos ningún tipo de información personal. Las descargas son libres, directas y totalmente seguras.",
                 footerText: "© 2026 JPEG Store • Todos los derechos reservados"
             },
             en: {
+                pageTitle: "Digital Vault | JPEG Store",
+                brandText: "⚡ DIGITAL_VAULT_V1.2",
+                navRes: "Resources & Manuals",
+                navArch: "Architecture",
+                navPriv: "Privacy & Policies",
                 btnNavPortfolio: "🌐 JPEG Portfolio",
-                btnLang: "🇨🇴 ES",
-                heroDesc: "Centralized digital vault for high-impact resources, prompt engineering guides, and clean code architectures.",
+                btnLang: "🇺🇸 ENG",
+                heroTitle: "Digital Vault",
+                heroDesc: "Centralized digital vault for high-impact resources, prompt engineering guides, agile Codex workflow setups, and clean code architectures.",
                 titleResources: "Resources & Manuals",
+                
+                tagCodex: "INSTALLATION GUIDE",
+                cardCodexTitle: "Codex: Installation & Dev Workflow",
+                cardCodexDesc: "Quick and structured guide with best practices to set up Codex AI coding agent in your local environment, optimize prompts, and generate clean code.",
+                step1Title: "⚡ Step 1: Install CLI / Extension",
+                step1Code: "<code>npm install -g @openai/codex</code> &nbsp;or enable the VS Code extension.",
+                step2Title: "🔑 Step 2: API Key Authentication",
+                step2Code: "<code>export OPENAI_API_KEY=\"your-token-here\"</code> (Linux/Mac) or <code>$env:OPENAI_API_KEY=\"your-token\"</code> (PowerShell).",
+                step3Title: "🚀 Step 3: Execution & Clean Generation Workflow",
+                step3Code: "<code>codex --goal \"Build a modular Vanilla JS SPA component with local persistence\"</code>",
+                priceCodex: "FREE ACCESS",
+                btnCodex: "Explore Codex Ecosystem ⚡",
+
                 tagEs: "100% OFF PROMO",
-                cardEsTitle: "Gemini Tailored for You",
-                cardEsDesc: "The definitive Spanish manual for custom instructions and Gems to make the most of your AI with a practical approach.",
+                cardEsTitle: "Gemini Tailored for You (Spanish Edition)",
+                cardEsDesc: "The definitive Spanish manual for custom instructions and Gems to make the most of your AI with a practical and productive approach.",
                 priceEs: "FREE",
-                btnEs: "Direct PDF Download 🚀",
+                btnEs: "Download Spanish PDF 🚀",
+
                 tagEn: "100% OFF PROMO",
-                cardEnTitle: "Gemini in Your Way",
+                cardEnTitle: "Gemini in Your Way (English Edition)",
                 cardEnDesc: "The ultimate English manual for custom instructions and specialized Gems designed to optimize your everyday AI workflows.",
                 priceEn: "FREE",
-                btnEn: "Direct PDF Download 🚀",
+                btnEn: "Download English PDF 🚀",
+
                 titleArch: "System Architecture",
                 archDesc: "Technical structure optimized for rapid digital asset delivery without server-side friction or intermediaries.",
                 archNode1Title: "01. Edge Hosting",
@@ -454,47 +659,91 @@
                 archNode2Desc: "Direct client-server downloading for maximum transfer speed.",
                 archNode3Title: "03. Lightweight UI",
                 archNode3Desc: "Built with native HTML5/CSS3 featuring ultra-fast rendering without heavy dependencies.",
-                privTitle: "🔒 Privacy Policy & Digital Transparency",
+                
+                titlePrivacy: "Privacy & Policies",
                 privDesc: "At <strong>JPEG Store</strong> we value your peace of mind and privacy above all. This website operates under a <strong>zero data collection</strong> policy: we do not request registrations, use commercial tracking cookies, or store any personal information. Downloads are free, direct, and completely safe.",
                 footerText: "© 2026 JPEG Store • All rights reserved"
             }
         };
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'es' ? 'en' : 'es';
-            const t = i18n[currentLang];
+        function applyLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('jpeg_store_lang', lang);
+            const t = i18n[lang];
 
-            document.getElementById('btn-portfolio').innerHTML = t.btnNavPortfolio;
-            document.getElementById('btn-lang').innerHTML = t.btnLang;
-            document.getElementById('hero-desc').innerHTML = t.heroDesc;
-            document.getElementById('title-resources').innerHTML = t.titleResources;
+            document.title = t.pageTitle;
+            document.getElementById('html-root').lang = lang;
+            document.getElementById('brand-text').textContent = t.brandText;
+            document.getElementById('nav-res').textContent = t.navRes;
+            document.getElementById('nav-arch').textContent = t.navArch;
+            document.getElementById('nav-priv').textContent = t.navPriv;
+
+            document.getElementById('btn-portfolio').textContent = t.btnNavPortfolio;
+            document.getElementById('btn-lang').textContent = t.btnLang;
+            document.getElementById('hero-title').textContent = t.heroTitle;
+            document.getElementById('hero-desc').textContent = t.heroDesc;
+            document.getElementById('title-resources').textContent = t.titleResources;
             
-            document.getElementById('tag-es').innerHTML = t.tagEs;
-            document.getElementById('card-es-title').innerHTML = t.cardEsTitle;
-            document.getElementById('card-es-desc').innerHTML = t.cardEsDesc;
-            document.getElementById('price-es').innerHTML = t.priceEs;
-            document.getElementById('btn-es').innerHTML = t.btnEs;
+            document.getElementById('tag-codex').textContent = t.tagCodex;
+            document.getElementById('card-codex-title').textContent = t.cardCodexTitle;
+            document.getElementById('card-codex-desc').textContent = t.cardCodexDesc;
+            document.getElementById('step1-title').innerHTML = t.step1Title;
+            document.getElementById('step1-code').innerHTML = t.step1Code;
+            document.getElementById('step2-title').innerHTML = t.step2Title;
+            document.getElementById('step2-code').innerHTML = t.step2Code;
+            document.getElementById('step3-title').innerHTML = t.step3Title;
+            document.getElementById('step3-code').innerHTML = t.step3Code;
+            document.getElementById('price-codex').textContent = t.priceCodex;
+            document.getElementById('btn-codex').textContent = t.btnCodex;
 
-            document.getElementById('tag-en').innerHTML = t.tagEn;
-            document.getElementById('card-en-title').innerHTML = t.cardEnTitle;
-            document.getElementById('card-en-desc').innerHTML = t.cardEnDesc;
-            document.getElementById('price-en').innerHTML = t.priceEn;
-            document.getElementById('btn-en').innerHTML = t.btnEn;
+            document.getElementById('tag-es').textContent = t.tagEs;
+            document.getElementById('card-es-title').textContent = t.cardEsTitle;
+            document.getElementById('card-es-desc').textContent = t.cardEsDesc;
+            document.getElementById('price-es').textContent = t.priceEs;
+            document.getElementById('btn-es').textContent = t.btnEs;
 
-            document.getElementById('title-arch').innerHTML = t.titleArch;
-            document.getElementById('arch-desc').innerHTML = t.archDesc;
-            document.getElementById('arch-node1-title').innerHTML = t.archNode1Title;
-            document.getElementById('arch-node1-desc').innerHTML = t.archNode1Desc;
-            document.getElementById('arch-node2-title').innerHTML = t.archNode2Title;
-            document.getElementById('arch-node2-desc').innerHTML = t.archNode2Desc;
-            document.getElementById('arch-node3-title').innerHTML = t.archNode3Title;
-            document.getElementById('arch-node3-desc').innerHTML = t.archNode3Desc;
+            document.getElementById('tag-en').textContent = t.tagEn;
+            document.getElementById('card-en-title').textContent = t.cardEnTitle;
+            document.getElementById('card-en-desc').textContent = t.cardEnDesc;
+            document.getElementById('price-en').textContent = t.priceEn;
+            document.getElementById('btn-en').textContent = t.btnEn;
 
-            document.getElementById('priv-title').innerHTML = t.privTitle;
+            document.getElementById('title-arch').textContent = t.titleArch;
+            document.getElementById('arch-desc').textContent = t.archDesc;
+            document.getElementById('arch-node1-title').textContent = t.archNode1Title;
+            document.getElementById('arch-node1-desc').textContent = t.archNode1Desc;
+            document.getElementById('arch-node2-title').textContent = t.archNode2Title;
+            document.getElementById('arch-node2-desc').textContent = t.archNode2Desc;
+            document.getElementById('arch-node3-title').textContent = t.archNode3Title;
+            document.getElementById('arch-node3-desc').textContent = t.archNode3Desc;
+
+            document.getElementById('title-privacy').textContent = t.titlePrivacy;
             document.getElementById('priv-desc').innerHTML = t.privDesc;
-            document.getElementById('footer-text').innerHTML = t.footerText;
+            document.getElementById('footer-text').textContent = t.footerText;
         }
+
+        function toggleLanguage() {
+            applyLanguage(currentLang === 'es' ? 'en' : 'es');
+        }
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('jpeg_store_theme', theme);
+            if (theme === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('btn-theme').textContent = '☀️';
+            } else {
+                document.body.classList.remove('light-theme');
+                document.getElementById('btn-theme').textContent = '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        applyLanguage(currentLang);
+        applyTheme(currentTheme);
     </script>
 </body>
 </html>
-<html>
